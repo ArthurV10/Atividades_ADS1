@@ -77,8 +77,8 @@ def printSequenceAbcdarian(archive):
     total_palavras = 0
     for line in archive:
         total_palavras += 1
-        line = line.strip()  # Removendo espaços e quebras de linha
-        if abcderian(line):  # Verifica se a palavra está em ordem alfabética
+        line = line.strip()
+        if abcderian(line):  
             count += 1
             print(f"""
             Palavra {count} em ordem alfabética:
@@ -89,13 +89,12 @@ def main():
     option = 0
     file = ""
     while option != 8:
-        file = open("words.txt")
         clearScreen()
         showMenu()
         option = verificationNumber(int(input(">>> ")), 0, 8)
 
         if option == 1:
-            file = loadArchive("words.txt")
+            file = open("words.txt", "r")
             print("Arquivo Carregado!")
             pressEnter()
 
@@ -105,6 +104,7 @@ def main():
                 print("Arquivo Ainda Não Carregado!")
                 pressEnter()
             elif file != "":
+                file.seek(0)
                 print20Char(file)
                 pressEnter()
 
@@ -114,6 +114,7 @@ def main():
                 print("Arquivo Ainda Não Carregado!")
                 pressEnter()
             elif file != "":
+                file.seek(0)
                 hasNoEQuestion(file)
                 pressEnter()
 
@@ -123,6 +124,7 @@ def main():
                 print("Arquivo Ainda Não Carregado!")
                 pressEnter()
             elif file != "":
+                file.seek(0)
                 prohibitedLetter(file, input("Digite as letras proibidas: "))
                 pressEnter()
 
@@ -132,6 +134,7 @@ def main():
                 print("Arquivo Ainda Não Carregado!")
                 pressEnter()
             elif file != "":
+                file.seek(0)
                 permittedLetters(file, input("Digite as letras permitidas: "))
                 pressEnter()
         
@@ -141,6 +144,7 @@ def main():
                 print("Arquivo Ainda Não Carregado!")
                 pressEnter()
             elif file != "":
+                file.seek(0)
                 mandatoryLetters(file, input("Digite as letras obrigatorias: "))
                 pressEnter()
         
@@ -150,6 +154,7 @@ def main():
                 print("Arquivo Ainda Não Carregado!")
                 pressEnter()
             elif file != "":
+                file.seek(0)
                 printSequenceAbcdarian(file)
                 pressEnter()
     print("Encerrando Programa...")
