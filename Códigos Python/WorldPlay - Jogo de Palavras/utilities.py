@@ -11,7 +11,7 @@ def loadArchive(archive):
 
 def verificationNumber(number, MinNumber, MaxNumber):
     num = number
-    while number > MaxNumber or number < MinNumber:
+    while num > MaxNumber or num < MinNumber:
         print("Digitação Inválida!")
         num = int(input("Digite novamente: "))
     return num
