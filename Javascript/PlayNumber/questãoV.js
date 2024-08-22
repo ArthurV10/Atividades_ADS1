@@ -1,6 +1,6 @@
-import {getNumber, getNumberInRange, pressEnter, clearScrean} from "./utils.js"
-import {showMenu, executeOptionsIn1, ItensInTheValue, executeOptionsIn10} from "./vetor_funcionalidades .js"
-import { summationList, calculateAverage, checkPositiveNumbers, checkHigherLowerInList, checkNegativeNumbers} from "./vetor_utils.js";
+import {getNumber, getNumberInRange, pressEnter, clearScrean, getPositiveNumber, saveArchive} from "./utils.js"
+import {showMenu, executeOptionsIn1, itensInTheValue, executeOptionsIn10} from "./vetor_funcionalidades .js"
+import { summationList, calculateAverage, checkPositiveNumbers, checkHigherLowerInList, checkNegativeNumbers,addNumbersInList, removeItemInList, removeItemForValueInList} from "./vetor_utils.js";
 
 const opcoesMenu = [
     "Inicializa Vetor Numérico",
@@ -34,26 +34,28 @@ const opcoesMenu3 = [
     "Ordenar Valores",
     "Embaralhar Valores"
 ]
+
 function main(){
-    let list = []
+    clearScrean()
+    let list = [[0], ""]
     let option = 0
     while (option !== 15){
         clearScrean()
-        showMenu(opcoesMenu, "|========|MENU|========|");
+        showMenu(opcoesMenu, "|=====|MENU|=====|");
         option = getNumberInRange(1, 15, ">>> ");
         clearScrean()
         
         // Opção 1 é escolhida e executa o proximo menu
         let text = ""
         if (option === 1){
-            showMenu(opcoesMenu2, "|====Segundo Menu|====|")
+            showMenu(opcoesMenu2, "|=====|Segundo Menu|=====|")
             // Pergunta qual opção dentro do menu 1 deve ser executada
             let _option = getNumberInRange(1, 3, ">>> ")
             // Executa a opção escolhida
-            list = executeOptionsIn1(_option)
+            list = executeOptionsIn1(_option, list[1])
         }
         else if (option === 2){
-            console.log(list)
+            console.log("O Valores São ", list[0])
         }
         else if (option === 3){
             list = []
@@ -61,52 +63,64 @@ function main(){
         }
         else if (option === 4){
             let value = getNumber("Digite o valor que deseja verificar: ")
-            text = ItensInTheValue(list, value)
+            text = itensInTheValue(list[0], value)
             console.log(text)
         }
         else if (option === 5){
-            let _listHigherLower = checkHigherLowerInList(list)
+            let _listHigherLower = checkHigherLowerInList(list[0])
             console.log(_listHigherLower[0]);
             console.log(_listHigherLower[1]);
         }
         else if (option === 6){
-            let _value = summationList(list)
+            let _value = summationList(list[0])
             console.log(`O somatorio é igual é ${_value}`)
         }
         else if (option === 7){
-            let _average = calculateAverage(list)
+            let _average = calculateAverage(list[0])
             console.log(`A média é igual a ${_average}`)
         }
         else if (option === 8){
-            let positiveNumber = checkPositiveNumbers(list)
+            let positiveNumber = checkPositiveNumbers(list[0])
             console.log (`Os numeros positivos são ${positiveNumber[0]}`)
             console.log (`A quantidade de numeros positivos são ${positiveNumber[1]}`)
         }
         else if (option === 9){
-            let negativeNumber = checkNegativeNumbers(list)
+            let negativeNumber = checkNegativeNumbers(list[0])
             console.log (`Os numeros negativos são ${negativeNumber[0]}`)
             console.log (`A quantidade de numeros negativos são ${negativeNumber[1]}`)
         }
         else if (option === 10){
             clearScrean()
-            showMenu(opcoesMenu3, "|====|Terceiro Menu|====|")
+            showMenu(opcoesMenu3, "|=====|Terceiro Menu|=====|")
             let _option = getNumberInRange(1, 6, ">>> ")
-            list = executeOptionsIn10(_option, list)
-        }
+            list[0] = executeOptionsIn10(list[0], _option)
+            console.log (`Valores Atualizados!`)
+        } 
         else if (option === 11){
+            let _qtd = getPositiveNumber("Digite quantos numeros deseja adicionar: ")
+            list[0] = addNumbersInList(list[0], _qtd)
         }
         else if (option === 12){
+            let _value = getNumber("Digite o valor que deseja remover: ")
+            list[0] = removeItemForValueInList(list[0], _value)
         }
         else if (option === 13){
+            let _position = getPositiveNumber("Digite a posição que deseja: ")
+            list[0] = removeItemInList(list[0], (_position - 1))
+            console.log("Item Removido Da Lista!")
         }
         else if (option === 14){
+            saveArchive(list[1], list[0])
+            console.log("Arquivo Salvo Manulmente")
         }
-        else if (option === 15){
-        }
+
     pressEnter()
     clearScrean()
     }
-    console.log("Encerrando . . .")
+    saveArchive(list[1], list[0]);
+    console.log("Arquivo Salvo Automaticamente!");
+    console.log("Encerrando . . .");
+
 }
 main()
 

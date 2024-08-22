@@ -1,6 +1,5 @@
-import { getNumber, getText, pressEnter, verificationMinMaxForNumber} from "./utils.js";
-import { loadArchive, multiplyNumbers } from "./vetor_utils.js";
-import fs from "fs"
+import { getNumber, getText, verificationMinMaxForNumber, verificationMinMaxInRange} from "./utils.js";
+import { loadArchive, multiplyNumbers, changeNegativeValueInRange, potentialNumber, fractionReduceNumber, sortList} from "./vetor_utils.js";
 
 export function showMenu(archive, title){
     let count = 0;
@@ -16,79 +15,79 @@ export function showMenu(archive, title){
     }
 }
 
-export function executeOptionsIn1(option){
-    let _numberList = []
-    let rangeMid = 0
-    let rangeMax = 0
-    let _qtd = 0
-    // Os valores que devem ser gerados, entre tal numero até tal numero
-    if (option !== 3){
-        rangeMid = getNumber("Digite O Valor Minimo: ")
-        rangeMax = getNumber("Digite O Valor Máximo: ")
-        _qtd = getNumber("Digite A Quantidade De Itens Na Lista: ")
-        // Caso o valor minimo seja maior que o valor maximo, ele irá pedir novamente
-        while (rangeMax < rangeMid){
-            console.log("O valor minimo é superior ao máximo")
-            console.log("Valor inserido é  invalido!")
-            rangeMid = getNumber("Digite O Valor Minimo Novamente: ")
-            rangeMax = getNumber("Digite O Valor Máximo Novamente: ")
+export function executeOptionsIn1(option, _nameArchive) {
+    let _numberList = [];
+    let rangeMid = 0;
+    let rangeMax = 0;
+    let range = [];
+    let _qtd = 0; 
+
+    if (option !== 3) {
+        rangeMid = getNumber("Digite O Valor Minimo: ");
+        rangeMax = getNumber("Digite O Valor Máximo: ");
+        _qtd = getNumber("Digite A Quantidade De Itens Na Lista: ");
+        range = verificationMinMaxInRange(rangeMid, rangeMax);
+    }
+
+    if (option === 1) {
+        _numberList = generateRandomVectorInRange(range[0], range[1], _qtd, _numberList);
+        console.log("Lista Gerada Automaticamente!");
+    } else if (option === 2) {
+        while (_qtd > 0) {
+            _qtd -= 1;
+            let _number = getNumber("Digite Um Numero Para Inserir Na Lista: ");
+            _numberList.push(verificationMinMaxForNumber(range[0], range[1], _number));
         }
+    } else if (option === 3) {
+        _nameArchive = getText("Digite O Nome Do Arquivo (Ex: arquivo.txt): ");
+        _numberList = loadArchive(_nameArchive);
+        console.log("Arquivo Carregado!");
     }
     
-    if (option === 1){
-        // Gera uma lista automaticamente entre o range apresentado
-
-        _numberList = GenerateRandomVectorInRange(rangeMid, rangeMax, _qtd, _numberList)
-        console.log("Lista Gerada Automaticamente!")
-    }
-    else if(option === 2){
-        // Gera uma lista manualmente
-        while (_qtd > 0){
-            _qtd -= 1
-            // Verifica se o numero digitado esta dentro do range apresentado
-            let _number = getNumber("Digite Um Numero Para Inserir Na Lista: ")
-            _numberList.push(verificationMinMaxForNumber(rangeMid, rangeMax, _number))
-        }
-    }
-    else if(option === 3){
-        _numberList = (loadArchive(getText("Digite o nome do arquivo (Ex: arquivo.txt): ")))
-        console.log("Arquivo Carregado!")
-    }
-    return _numberList
+    return [_numberList, _nameArchive];
 }
 
-export function executeOptionsIn10(option, list){
+export function executeOptionsIn10(list, option){
     let _newNumberList = []
     if (option === 1){
-        let _multiple = getNumber("Digite o numero que deseje que multiplique: ")
+        let _multiple = getNumber("Digite O Numero Que Deseje Que Multiplique: ")
         _newNumberList = multiplyNumbers(list, _multiple)
     }
     else if (option === 2){
-
+        let _potential = getNumber("Digite A Qual Numero Deseja Elevar: ")
+        _newNumberList = potentialNumber(list, _potential)
     }
     else if (option === 3){
-        
+        let _fraction = getText("Digite A Qual Potencia Deseja Reduzir(Ex: 1/5): ")
+        _newNumberList = fractionReduceNumber(list, _fraction)
     }
     else if (option === 4){
-        
+        let _min = getNumber("Digite o valor minimo: ")
+        let _max = getNumber("Digite o valor maximo: ")
+        let _range = verificationMinMaxInRange(_min, _max)
+        _newNumberList = changeNegativeValueInRange(list, _range[0], _range[1])
     }
     else if (option === 5){
-        
+        _newNumberList = sortList(list) 
     }
     else if (option === 6){
-        
+        "FAZER DEPOIS"
     }
     return _newNumberList
 }
 
-export function GenerateRandomVectorInRange(mid, max, qtd, list){
+export function generateRandomVectorInRange(mid, max, qtd, list){
     for (let i = 0; i < qtd; i++ ){
         list.push(Math.floor(Math.random() * (max - mid + 1)) + mid)
     }
     return list
 }
 
-export function ItensInTheValue(list , value){
+export function generateRandom(mid, max){
+    return Math.floor(Math.random() * (max - mid + 1)) + mid
+} 
+
+export function itensInTheValue(list , value){
     let count = 0 
     for (let item of list){
         if (item === value){
@@ -97,4 +96,3 @@ export function ItensInTheValue(list , value){
     }
     return `Existem ${count} numero(s)`
 }
-
