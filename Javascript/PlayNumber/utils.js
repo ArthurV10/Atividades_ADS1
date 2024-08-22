@@ -22,6 +22,32 @@ export function getNegativeNumber(text){
     return number
 }
 
+export function getNumberInRange(mid, max, text){
+    let number = getNumber(text)
+    while (number < mid || number > max){
+        console.log("Numero Invalido!")
+        number = getNumber("Digite um numero novamente: ")
+    }
+    return number
+}
+
+
 export function getText(text){
     return String(question(text))
+}
+
+export function verificationMinMaxForNumber(min, max, number){
+    while (number < min || number > max){
+        console.log("Numero Anterior Invalido!")
+        number = Number(question("Digite um valor entre o minimo e máximo: "))
+    }
+    return number
+}
+
+export function pressEnter(){
+    return getText("Pressione Enter ")
+}
+
+export function clearScrean(){
+   return process.stdout.write('\x1B[2J\x1B[3J\x1B[H');
 }
