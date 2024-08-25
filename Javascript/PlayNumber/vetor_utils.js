@@ -1,20 +1,41 @@
 import fs from "fs"
-import { getNumber, getText, saveArchive } from "./utils.js"
+import { getNumber, getText, pressEnter, saveArchive } from "./utils.js"
 import { generateRandom } from "./vetor_funcionalidades .js"
 
+
+/**
+ * Função que carrega um vetor numérico armazenado em arquivo.
+ * @param {archive} archive Nome do arquivo a ser carregado
+ * @returns lista de inteiros carregados
+ */
 export function loadArchive(archive){
-    let archiveList = archive
-    while (!fs.existsSync(archiveList)){
+    // Guardar nome do arquivo
+    let archiveName = archive;
+
+    // Caso o arquivo não exista, criar um novo.
+    while (!fs.existsSync(archiveName)){
         console.log("Arquivo Não Existente!")
         console.log("É Nescessário Estar Na Mesma Pasta")
         console.log("É nova arquivo será criado")
-        saveArchive(archiveList, " ", "utf8")
+        saveArchive(archiveName, " ", "utf8")
     }
-    archiveList = fs.readFileSync(archiveList, "utf8").split("\n")
+
+    // Array de números carregados do arquivo.
+    let archiveNumberArray = [];
+
+    // Ler todas as linhas do arquivo
+    let archiveList = fs.readFileSync(archiveName, "utf8").split("\n")
     for (let i = 0; i < archiveList.length; i++ ){
-        archiveList[i] = Number(archiveList[i])
+        // Para cada linha, converter em número caso possua um valor
+        let _archiveLine = archiveList[i];
+        if (_archiveLine.length > 0) {
+            let _value = Number(_archiveLine);
+            archiveList[i] = _value
+            // Adicionar número ao Vetor
+            archiveNumberArray.push(_value);
+        }
     }
-    return archiveList
+    return archiveNumberArray
 }
 
 export function summationList(list){
@@ -132,7 +153,7 @@ export function changeNegativeValueInRange(list, min, max){
     
 export function addNumbersInList(list, qtd){
     for (let i = 0; qtd > i; i++ ){
-        let _number = getNumber("Digite o numero que deseja adicionar")
+        let _number = getNumber("Digite o numero que deseja adicionar: ")
         list.push(_number)
     }
     return list
@@ -171,33 +192,34 @@ export function transformInString(archive) {
     return newList.trim(); // Remove a última nova linha desnecessária
 }
 
-export function sortList(list){
-    //TODO: Enteder como funciona a função
-    let n = list.length;
-    let swapped;
+export function sortList(list) {
+    let newList = [];
+    while (list.length > 0) {
+        let lowerNumber = list[0];
+        let index = 0;
 
-    // Loop para repetir o processo até que a lista esteja ordenada
-    do {
-        swapped = false; // Inicialmente, assume que não há trocas
-
-        // Percorre a lista até o penúltimo elemento
-        for (let i = 0; i < n - 1; i++) {
-            // Compara o elemento atual com o próximo
-            if (list[i] > list[i + 1]) {
-                // Se o elemento atual for maior, troca de lugar com o próximo
-                let temp = list[i];
-                list[i] = list[i + 1];
-                list[i + 1] = temp;
-
-                // Marca como trocado
-                swapped = true;
+        for (let i = 1; i < list.length; i++) {
+            if (list[i] < lowerNumber) {
+                lowerNumber = list[i];
+                index = i;
             }
         }
-
-        // Reduz o comprimento da lista a ser verificada (último elemento já está ordenado)
-        n--;
-
-    } while (swapped); // Continua até que nenhuma troca seja feita
-
-    return list;
+        newList.push(lowerNumber);
+        list.splice(index, 1);
+    }
+    return newList;
 }
+
+export function shuffleVector(list) {
+    let newList = [];
+    while (list.length > 0) {
+        // Gera um índice aleatório entre 0 e o comprimento atual da lista menos 1
+        let indexNumber = generateRandom(0, list.length - 1);
+        // Adiciona o item aleatório à nova lista
+        newList.push(list[indexNumber]);
+        // Remove o item selecionado da lista original
+        list.splice(indexNumber, 1);
+    }
+    return newList;
+}
+

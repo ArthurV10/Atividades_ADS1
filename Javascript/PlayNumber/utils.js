@@ -64,6 +64,12 @@ export function clearScrean(){
    return process.stdout.write('\x1B[2J\x1B[3J\x1B[H');
 }
 
+/**
+ * Salva um arquivo com um nome especificado
+ * @param {string} name_archive Nome do arquivo a ser salvo
+ * @param {Array} data Array que será convertido em string
+ * @returns void
+ */
 export function saveArchive(name_archive, data) {
     data = transformInString(data);
     if (!fs.existsSync(name_archive)) {

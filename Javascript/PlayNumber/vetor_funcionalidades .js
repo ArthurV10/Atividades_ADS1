@@ -1,5 +1,5 @@
 import { getNumber, getText, verificationMinMaxForNumber, verificationMinMaxInRange} from "./utils.js";
-import { loadArchive, multiplyNumbers, changeNegativeValueInRange, potentialNumber, fractionReduceNumber, sortList} from "./vetor_utils.js";
+import { loadArchive, multiplyNumbers, changeNegativeValueInRange, potentialNumber, fractionReduceNumber, sortList, shuffleVector} from "./vetor_utils.js";
 
 export function showMenu(archive, title){
     let count = 0;
@@ -68,10 +68,12 @@ export function executeOptionsIn10(list, option){
         _newNumberList = changeNegativeValueInRange(list, _range[0], _range[1])
     }
     else if (option === 5){
-        _newNumberList = sortList(list) 
+        _newNumberList = sortList(list)
+        console.log("Lista Organizada: ", _newNumberList) 
     }
     else if (option === 6){
-        "FAZER DEPOIS"
+        _newNumberList  = shuffleVector(list)
+        console.log("Lista Embaralhada: ", _newNumberList) 
     }
     return _newNumberList
 }

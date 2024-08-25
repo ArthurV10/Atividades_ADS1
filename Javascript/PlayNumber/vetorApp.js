@@ -1,13 +1,22 @@
-import {getNumber, getNumberInRange, pressEnter, clearScrean, getPositiveNumber, saveArchive} from "./utils.js"
+// Importar funções de utilidades
+import {
+    getNumber, 
+    getNumberInRange, 
+    pressEnter, 
+    clearScrean, 
+    getPositiveNumber, 
+    saveArchive
+} from "./utils.js"
+
 import {showMenu, executeOptionsIn1, itensInTheValue, executeOptionsIn10} from "./vetor_funcionalidades .js"
 import { summationList, calculateAverage, checkPositiveNumbers, checkHigherLowerInList, checkNegativeNumbers,addNumbersInList, removeItemInList, removeItemForValueInList} from "./vetor_utils.js";
 
 const opcoesMenu = [
-    "Inicializa Vetor Numérico",
+    "Inicializar Uma Lista",
     "Mostrar Todos os Valores",
-    "Resetar Vetor",
-    "Ver Quantidade De Itens No Valor",
-    "Ver Menor e Maior Valores e Suas Posições",
+    "Resetar Lista",
+    "Escolher Valor Para Apresentar Quantidade na Lista",
+    "Apresentar o Menor e Maior Valor",
     "Somátorio dos Valores",
     "Média dos Valores",
     "Mostrar Valores Positivos e Quantidade",
@@ -21,13 +30,13 @@ const opcoesMenu = [
 ];
 
 const opcoesMenu2 = [
-    "Deseja um Vetor Com Dados Automáticos",
-    "Deseja Informar Valores", 
+    "Criar Lista Automaticamente",
+    "Criar Lista Manualmente", 
     "Carregar Arquivo"
 ]
 
 const opcoesMenu3 = [
-    "Multipicar Por Um Valor",
+    "Multipicar Lista Por Um Valor",
     "Elevar A Um Valor(Exponenciação)",
     "Reduzir A Uma Fração (Ex: 1/5)",
     "Substituir valores negativos entre um limite minimo e maximo",
@@ -37,7 +46,7 @@ const opcoesMenu3 = [
 
 function main(){
     clearScrean()
-    let list = [[0], ""]
+    let list = [[], ""]
     let option = 0
     while (option !== 15){
         clearScrean()
@@ -58,7 +67,7 @@ function main(){
             console.log("O Valores São ", list[0])
         }
         else if (option === 3){
-            list = []
+            list = [[]]
             console.log("Lista Resetada!")
         }
         else if (option === 4){
@@ -97,14 +106,18 @@ function main(){
             console.log (`Valores Atualizados!`)
         } 
         else if (option === 11){
+            console.log("Lista Atual ", list[0])
             let _qtd = getPositiveNumber("Digite quantos numeros deseja adicionar: ")
             list[0] = addNumbersInList(list[0], _qtd)
         }
         else if (option === 12){
+            console.log("Lista Atual ", list[0])
             let _value = getNumber("Digite o valor que deseja remover: ")
             list[0] = removeItemForValueInList(list[0], _value)
+            console.log("Valor Removido Da Lista!")
         }
         else if (option === 13){
+            console.log("Lista Atual ", list[0])
             let _position = getPositiveNumber("Digite a posição que deseja: ")
             list[0] = removeItemInList(list[0], (_position - 1))
             console.log("Item Removido Da Lista!")
