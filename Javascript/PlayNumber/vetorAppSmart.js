@@ -1,5 +1,6 @@
 // Importar funções de utilidades
 import {
+    print,
     getNumber, 
     getNumberInRange, 
     pressEnter, 
@@ -9,7 +10,7 @@ import {
 } from "./utils.js"
 
 import {showMenu, executeOptionsIn1, itensInTheValue, executeOptionsIn10} from "./vetor_funcionalidades .js"
-import { summationList, calculateAverage, checkPositiveNumbers, checkHigherLowerInList, checkNegativeNumbers,addNumbersInList, removeItemInList, removeItemForValueInList} from "./vetor_utils.js";
+import {addNumbersInList, removeItemInList, removeItemForValueInList, toFilter, summationList} from "./vetor_utils.js";
 
 const opcoesMenu = [
     "Inicializar Uma Lista",
@@ -66,59 +67,65 @@ function main(){
         }
         else if (option === 3){
             list = [[]]
-            console.log("Lista Resetada!")
+            print("Lista Resetada!")
         }
         else if (option === 4){
             text = itensInTheValue(list[0], getNumber("Digite o valor que deseja verificar: "))
-            console.log(text)
+            print(text)
         }
         else if (option === 5){
-            console.log(checkHigherLowerInList(list[0])[0]);
-            console.log(checkHigherLowerInList(list[0])[1]);
+            print(`O Maior Numero Da Lista é ${(() => Math.max(...list))}`);
+            print(`O Menor Numero Da Lista é ${(() => Math.min(...list))}`);
         }
         else if (option === 6){
-            console.log(`O somatorio é igual é ${summationList(list[0])}`)
+            let _soma = summationList(list[0])
+            print(`O somatorio é igual é ${_soma}`)
         }
         else if (option === 7){
-            console.log(`A média é igual a ${calculateAverage(list[0])}`)
+            let _soma = summationList(list[0])
+            print(`A média é igual a ${_soma / list[0].length}`)
         }
         else if (option === 8){
-            console.log (`Os numeros positivos são ${checkPositiveNumbers(list[0])[0]}`)
-            console.log (`A quantidade de numeros positivos são ${checkPositiveNumbers(list[0])[1]}`)
+            print (`Os numeros positivos são ${(toFilter(list[0], (item) => item > 0))}`)
+            print (`A quantidade de numeros positivos = ${(toFilter(list[0], (item) => item > 0).length)}`)
         }
         else if (option === 9){
-            console.log (`Os numeros negativos são ${checkNegativeNumbers(list[0])[0]}`)
-            console.log (`A quantidade de numeros negativos são ${checkNegativeNumbers(list[0])[1]}`)
+            print (`Os numeros negativos são ${(toFilter(list[0], (item) => item < 0))}`)
+            print (`A quantidade de numeros negativos são ${(toFilter(list[0], (item) => item < 0).length)}`)
         }
         else if (option === 10){
             clearScrean()
             showMenu(opcoesMenu3, "|=====|Terceiro Menu|=====|")
-            list[0] = executeOptionsIn10(list[0], getNumberInRange(1, 6, ">>> "))
-            console.log (`Valores Atualizados!`)
+            let _option = getNumberInRange(1, 6, ">>> ")
+            list[0] = executeOptionsIn10(list[0], _option)
+            print (`Valores Atualizados!`)
         } 
         else if (option === 11){
-            console.log("Lista Atual ", list[0])
-            list[0] = addNumbersInList(list[0], getPositiveNumber("Digite quantos numeros deseja adicionar: "))
+            print("Lista Atual ", list[0])
+            let _qtd = getPositiveNumber("Digite quantos numeros deseja adicionar: ")
+            list[0] = addNumbersInList(list[0], _qtd)
         }
         else if (option === 12){
-            console.log("Lista Atual ", list[0])
-            list[0] = removeItemForValueInList(list[0], getNumber("Digite o valor que deseja remover: "))
-            console.log("Valor Removido Da Lista!")
+            print("Lista Atual ", list[0])
+            let _value = getNumber("Digite o valor que deseja remover: ")
+            list[0] = removeItemForValueInList(list[0], _value)
+            print("Valor Removido Da Lista!")
         }
         else if (option === 13){
-            console.log("Lista Atual ", list[0])
-            list[0] = removeItemInList(list[0], (getPositiveNumber("Digite a posição que deseja: ") - 1))
-            console.log("Item Removido Da Lista!")
+            print("Lista Atual ", list[0])
+            let _position = getPositiveNumber("Digite a posição que deseja: ")
+            list[0] = removeItemInList(list[0], (_position - 1))
+            print("Item Removido Da Lista!")
         }
         else if (option === 14){
             saveArchive(list[1], list[0])
-            console.log("Arquivo Salvo Manulmente")
+            print("Arquivo Salvo Manulmente")
         }
     pressEnter()
     clearScrean()
     }
     saveArchive(list[1], list[0]);
-    console.log("Arquivo Salvo Automaticamente!");
-    console.log("Encerrando . . .");
+    print("Arquivo Salvo Automaticamente!");
+    print("Encerrando . . .");
 }
 main()

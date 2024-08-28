@@ -1,5 +1,5 @@
 import fs from "fs"
-import { getNumber, getText, pressEnter, saveArchive } from "./utils.js"
+import { getNumber, saveArchive } from "./utils.js"
 import { generateRandom } from "./vetor_funcionalidades .js"
 
 
@@ -223,3 +223,12 @@ export function shuffleVector(list) {
     return newList;
 }
 
+export function toFilter(list, condition){
+    const newList = []
+    for (let item of list){
+        if (condition(item)){
+            newList.push(item)
+        }
+    }
+    return newList
+}

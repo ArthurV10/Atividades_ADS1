@@ -79,4 +79,8 @@ export function saveArchive(name_archive, data) {
     return fs.writeFileSync(name_archive, data, "utf8");
 }
 
+export function print(text){
+    return console.log(text)
+}
+
 
