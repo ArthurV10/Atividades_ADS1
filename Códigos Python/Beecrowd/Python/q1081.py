@@ -28,3 +28,18 @@ def main():
     # Depois Apagar oq esta nos inputs
     numberL = int(input("Digite a linha considerada da operação: "))
     caracter = input("Digite 'S' ou 'M': ")
+
+
+def criarMatriz(linha, coluna):
+    matriz = []
+    for i in range(linha):
+        matriz.append([])
+        for j in range(coluna):
+            matriz[i].append([])
+    return matriz
+
+def preencherMatriz(matriz):
+    for i in matriz:
+        for j in matriz[i]:
+            value = ra
+            matriz.append(value)
