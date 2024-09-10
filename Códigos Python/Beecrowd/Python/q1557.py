@@ -13,7 +13,7 @@ def createMatrix(line, column):
             matrix[line].append(0.0)
     return matrix
 
-def fillMatrix(condition, matrix):
+def fillMatrix(matrix):
     # Terminar depois a questão
     numeroProgressivo = 1
     numeroInicialLinha = 1
