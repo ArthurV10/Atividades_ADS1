@@ -88,3 +88,27 @@ def calculatePercentage(partialValue, totalValue):
         return 0
     percent = (partialValue / totalValue) * 100
     return percent
+
+def showMenu(arrayText : list, title : str):
+    print(title)
+    count = 1
+    for text in arrayText:
+        if count < 10:
+            print(f"|0{count} - {text}")
+        elif count >= 10:
+            print(f"|{count} - {text}")
+        count += 1
+
+def getPositiveNumber(text : str):
+    _numberPositive = int(input(text))
+    while _numberPositive <= 0:
+        print("Numero Invalido!")
+        _numberPositive = int(input("Digite O Numero Novamente: "))
+    return _numberPositive
+
+def getPositiveNumberWithZero(text : str):
+    _numberPositive = int(input(text))
+    while _numberPositive < 0:
+        print("Numero Invalido!")
+        _numberPositive = int(input("Digite O Numero Novamente: "))
+    return _numberPositive
