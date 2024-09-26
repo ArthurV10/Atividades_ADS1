@@ -5,6 +5,7 @@ from typing import Callable
 
 
 # Definições de cores ANSI
+WHITE_BACKGROUND = '\033[47m'
 BOLD = '\033[1m'
 ITALIC = '\033[3m'
 RED = '\033[91m'
@@ -14,14 +15,14 @@ RESET = '\033[0m'
 
 
 TEXT_TUTORIAL = [
-    F"|=======================|{BOLD}TUTORIAL{RESET}|=======================|",
-    "| 1 - O Simbolo '-' Significa Vazio                      |",
+    f"|=======================|{BOLD}TUTORIAL{RESET}|=======================|",
+    "| 1 - O Simbolo '-' significa vazio                      |",
     "|========================================================|",
-    "|     Quando Quiser Mover Uma Peça Para Outro Local,     |",
-    "| 2 - Digite O Simbolo Da Torre Que Deseja A Peça Mover, |",
-    "|     O Simbolo Da Torre Que Deve Receber A Peca         |",
+    "|     Quando quiser mover uma peça para outra torre,     |",
+    "| 2 - digite simbolo da torre que deseja a peça mover,   |",
+    "|     e o simbolo da torre que deve receber a peça       |",
     "|========================================================|",
-    f"|     Exemplo: '{RED}R{RESET}{GREEN}G{RESET}' Move A Peça Da Torre {RED}R{RESET} Para {GREEN}G{RESET}        |",
+    f"|     Exemplo: '{RED}R{RESET}{GREEN}G{RESET}' Move a peça da torre {RED}R{RESET} para {GREEN}G{RESET}        |",
     "|========================================================|"
 ]
 
@@ -33,6 +34,27 @@ TEXT_MENU = [
     "Sair                 |"
 ]
 
+
+TEXTE_MENU_DIFFICULT = [
+    f"|============| {BOLD}HANOI{RESET} {RED}DIFICULDADE{RESET} |=============|",
+    f"| 1 - Basico (Unica Torre Preenchida)          |",
+    f"| 2 - Intermediario (Preencher Aleatoriamente) |",
+    f"| 3 - Avançado (Prenchida Semi-Compelta)       |",
+    f"|==============================================|"
+]
+
+
+def showMenu(arrayText : list, title : str):
+    print(title)
+    count = 1
+    for text in arrayText:
+        if count < 10:
+            rainbow_text(f"|0{count} - {text}")
+        elif count >= 10:
+            rainbow_text(f"|{count} - {text}")
+        count += 1
+
+
 def rainbow_text(text):
     for i in range(len(text)):
         color_code = 20 + (i % 216) 
@@ -40,16 +62,45 @@ def rainbow_text(text):
     print("\033[0m")  # Resetar a cor
 
 
-def generateTowers(size: int = 1, qtd: int = 1, function: Callable[[], str] = lambda: ""):
+def generateTowers(size: int = 1, qtd: int = 1, function: Callable[[], str] = lambda: "", difficult : int = 1):
     tower = []
+    match difficult:
+        case 1:
+            basicDifficult(tower, size, qtd, function)
+        case 2:
+            intermediaryDifficult(tower, size, qtd, function)
+        case 3:
+            advancedDifficult(tower, size, qtd, function)
+    return tower
+
+
+def basicDifficult(tower, size, qtd, function: Callable[[], str] = lambda: ""):
     for i in range(size):
         tower.append([])  # Cria uma nova sublista para cada "andar"
         for j in range(qtd):
             if j == 0:
                 tower[i].append(function())  # Chama a função para obter o valor
             elif j >= 1:
-                 tower[i].append("-")  # Adiciona um espaço vazio
-    return tower
+                tower[i].append("-")  # Adiciona um espaço vazio
+
+
+def intermediaryDifficult(tower, size, qtd, function: Callable[[], str] = lambda: ""):
+    for i in range(size):
+        tower.append(["-"] * qtd)  # Inicializa todas as posições com "-"
+        
+    for i in range(qtd):
+        randomQtdTower = random.randint(3, 7)  # Escolhe aleatoriamente quantas peças deve possuir cada torre
+        for j in range(randomQtdTower):
+            tower[size - j - 1][i] = function()  # Preenche de baixo para cima
+
+
+def advancedDifficult(tower, size, qtd, function: Callable[[], str] = lambda: ""):
+    for i in range(size):
+        tower.append(["-"] * qtd)  # Inicializa todas as posições com "-"
+        
+    for i in range(qtd):
+        for j in range(size - 1, 0, -1):
+            tower[j][i] = function()  # Preenche de baixo para cima
 
 
 def generateRandomRGB() -> str:
@@ -89,27 +140,31 @@ def showTutorial(arrayText):
         print(arrayText[index])
 
 
+def showDifficult(arrayText):
+    for index in range(len(arrayText)):
+        print(arrayText[index])
+    
+
 def HanoiRGBGameMoviment(tower, answer):
     tower_map = {'R': 0, 'G': 1, 'B': 2}
     count = 0
+
+    if answer == "-1":
+        return -1  # Retorna -1 para indicar que o jogador quer voltar ao menu
 
     if len(answer) != 2:
         print("Erro: A entrada deve conter exatamente dois caracteres (ex: 'RG').")
         pressEnter()
         return count
-    
+
     try:
-        # Tenta obter os índices das torres a partir do dicionário
         from_tower = tower_map[answer[0]]
         to_tower = tower_map[answer[1]]
-
     except KeyError:
-        # Se uma das chaves não for encontrada, imprime uma mensagem de erro e retorna
         print("Erro: Torre inválida. Use 'R', 'G', ou 'B'.")
         pressEnter()
         return count
 
-    # Encontre a posição da peça a ser movida na torre de origem (de baixo para cima)
     piece = "-"
     for i in range(len(tower)):  # De baixo para cima
         if tower[i][from_tower] != "-":
@@ -117,7 +172,6 @@ def HanoiRGBGameMoviment(tower, answer):
             tower[i][from_tower] = "-"  # Remove a peça do local encontrado
             break
 
-    # Adiciona a peça no topo da torre de destino (de baixo para cima)
     if piece != "-":  # Se encontrou uma peça válida
         count += 1
         for i in range(len(tower) - 1, -1, -1):  # De cima para baixo
@@ -125,6 +179,7 @@ def HanoiRGBGameMoviment(tower, answer):
                 tower[i][to_tower] = piece  # Coloca a peça no novo local
                 break
     return count
+
 
 
 def verificationHanoiSuccessful(towers):
@@ -146,17 +201,24 @@ def clearScreen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def singlePlayer():
+def singlePlayer(settings : dict):
+    difficulty = settings["difficulty"]
     count = 0
-    towers = generateTowers(9, 3, generateRandomRGB)  # Gera torres com valores aleatórios
+    towers = generateTowers(9, 3, generateRandomRGB, difficulty)  # Gera torres com valores aleatórios
 
     while not verificationHanoiSuccessful(towers):
         clearScreen()
         showTowerVertical(3, 9, towers)
         rainbow_text(f"O Total De Movimentos Foi: {count}")
+        print('Se deseja retornar ao menu, digite "-1"')
         _answer = input("Digite Seu Movimento (Ex: RG, BG): ").upper()
-        count += HanoiRGBGameMoviment(towers, _answer)  # Agora a função modifica towers diretamente
-    
+        
+        # Verifica se o jogador deseja voltar ao menu
+        result = HanoiRGBGameMoviment(towers, _answer)
+        if result == -1:
+            return  # Sai do jogo e volta ao menu
+        count += result
+
     clearScreen()
     showTowerVertical(3, 9, towers)
     if count < 12:
@@ -168,48 +230,44 @@ def singlePlayer():
     pressEnter()
 
 
-def multiplayer():
-    countPlayer1 = 0
-    countPlayer2 = 0
-    towersPlayer1 = generateTowers(9, 3, generateRandomRGB)  # Gera torres para o Player 1
-    towersPlayer2 = copy.deepcopy(towersPlayer1)  # Cria uma cópia para o Player 2
+def multiplayer(settings : dict):
+    difficulty = settings["difficulty"]
+    player = 1
+    towers = generateTowers(9, 3, generateRandomRGB, difficulty)
+    player1_moves = 0
+    player2_moves = 0
 
-    # Player 1 joga primeiro
-    print(f"{ITALIC}Vez Do Player 1 Jogar!{RESET}")
-    pressEnter()
-    while not verificationHanoiSuccessful(towersPlayer1):
+    while not verificationHanoiSuccessful(towers):
         clearScreen()
-        showTowerVertical(3, 9, towersPlayer1)
-        rainbow_text(f"O Total De Movimentos Foi: {countPlayer1}")
-        _answer = input("Digite Seu Movimento (Ex: RG, BG): ").upper()
-        countPlayer1 += HanoiRGBGameMoviment(towersPlayer1, _answer)
+        showTowerVertical(3, 9, towers)
+        rainbow_text(f"Jogador {player} é Sua Vez.")
+        if player == 1:
+            rainbow_text(f"Movimentos Jogador 1: {player1_moves}")
+        else:
+            rainbow_text(f"Movimentos Jogador 2: {player2_moves}")
 
-    # Player 2 joga após o Player 1 terminar
-    print(f"{ITALIC}Vez Do Player 2 Jogar!{RESET}")
-    pressEnter()
-    while not verificationHanoiSuccessful(towersPlayer2):
-        clearScreen()
-        showTowerVertical(3, 9, towersPlayer2)
-        rainbow_text(f"O Total De Movimentos Foi: {countPlayer2}")
+        print('Se deseja retornar ao menu, digite "-1"')
         _answer = input("Digite Seu Movimento (Ex: RG, BG): ").upper()
-        countPlayer2 += HanoiRGBGameMoviment(towersPlayer2, _answer)
 
-    # Verifica quem venceu
+        result = HanoiRGBGameMoviment(towers, _answer)
+        if result == -1:
+            return  # Sai do jogo e volta ao menu
+
+        if player == 1:
+            player1_moves += result
+            player = 2
+        else:
+            player2_moves += result
+            player = 1
+
     clearScreen()
-
-    # Mostra o estado final das torres
-    print("\nEstado final das torres do Player 1:")
-    showTowerVertical(3, 9, towersPlayer1)
-    print("\nEstado final das torres do Player 2:")
-    showTowerVertical(3, 9, towersPlayer2)
-
-    if countPlayer1 < countPlayer2:
-        print(f"Player 1 Venceu Por {countPlayer2 - countPlayer1} Movimento(s)")
-    elif countPlayer1 > countPlayer2:
-        print(f"Player 2 Venceu Por {countPlayer1 - countPlayer2} Movimento(s)")
+    showTowerVertical(3, 9, towers)
+    if player1_moves < player2_moves:
+        rainbow_text(f"Jogador 1 Venceu com {player1_moves} Movimento/s!")
+    elif player2_moves < player1_moves:
+        rainbow_text(f"Jogador 2 Venceu com {player2_moves} Movimento/s!")
     else:
-        print("O Jogo Encerrou Em Empate!")
-
+        rainbow_text(f"Empate com {player1_moves} Movimento/s!")
     pressEnter()
 
 
@@ -218,34 +276,53 @@ def tutorial():
     while answerTutorial != "S":
         clearScreen()
         showTutorial(TEXT_TUTORIAL)
-        answerTutorial = input(">>> Foi Possivel Entender A Brincadeirinha? (S/N): ").upper()
+        answerTutorial = input(">>> Foi possivel entender a brincadeirinha? (S/N): ").upper()
         if answerTutorial == "N":
             print()
             print(f"Para Obter Um Conhecimento Mais Amplo, Visite: {BLUE}https://clubes.obmep.org.br/blog/torre-de-hanoi/{RESET}")
             input("Pression ENTER para prosseguir!")
 
 
-def menu(option):
+def askDifficult():
+    showDifficult(TEXTE_MENU_DIFFICULT)
+    try:
+        difficulty = int(input(">>> "))
+        if difficulty >= 1 and difficulty <= 3:
+            return difficulty
+        else:
+            print("Por favor, escolha uma dificuldade válida (1, 2 ou 3).")
+            return askDifficult()  # Rechama a função se a entrada for inválida
+    except ValueError:
+        print("Entrada inválida. Por favor, digite um número.")
+        return askDifficult()
+
+
+
+
+def menu(option, settings):
     clearScreen()
-    showMenu(TEXT_MENU, "|======| HANOI MENU |======|")
+    showMenu(TEXT_MENU, f"|======| {BOLD}HANOI{RESET} {RED}MENU{RESET} |======|")
     print("============================")
     option = int(input(">>> "))
     match option:
         case 1:
-            singlePlayer()
+            singlePlayer(settings)
         case 2:
-            multiplayer()
+            multiplayer(settings)
         case 3:
-            difficult()
+            settings["difficulty"] = askDifficult()
         case 4:
             return option
 
 
 def main():
     option = 0
+    settings = {
+        "difficulty" : 1
+    }
     tutorial()
     while option != 4:
-        option = menu(option)
+        option = menu(option, settings)
     print("Encerrando Program...")
 
 
